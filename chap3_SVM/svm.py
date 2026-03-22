@@ -34,12 +34,40 @@ class SVM():
 
     def __init__(self):
         # 请补全此处代码
-        pass
+        self.w = None
+        self.b = 0
+        self.lr = 0.01
+        self.epochs = 1000
+        self.C = 1.0
+
+    def linear_kernel(x1, x2):
+        return np.dot(x1, x2)
+    
+    def polynomial_kernel(x1, x2, degree=3):
+        return (np.dot(x1, x2) + 1) ** degree
+    
+    def rbf_kernel(x1, x2, gamma=0.5):
+        return np.exp(-gamma * np.linalg.norm(x1 - x2) ** 2)
 
     def train(self, data_train):
         """
         训练模型。
         """
+        X = data_train[:, :2]
+        y = data_train[:, 2]
+        y = np.where(y == 0, -1, 1)  # 将标签转换为 -1 和 1
+        
+        n_samples, n_features = X.shape
+        self.w = np.zeros(n_features)
+        
+        for epoch in range(self.epochs):
+            for i in range(n_samples):
+                condition = y[i] * (np.dot(X[i], self.w) + self.b) >= 1
+                if condition:
+                    self.w -= self.lr * (2 * self.w)
+                else:
+                    self.w -= self.lr * (2 * self.w - self.C * y[i] * X[i])
+                    self.b -= self.lr * (self.C * y[i])
 
         # 请补全此处代码
 
@@ -47,6 +75,9 @@ class SVM():
         """
         预测标签。
         """
+        linear_output = np.dot(x, self.w) + self.b
+        pred = np.where(linear_output >= 0, 1, 0)
+        return pred
 
         # 请补全此处代码
 
