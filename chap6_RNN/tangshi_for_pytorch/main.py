@@ -13,11 +13,9 @@ batch_size = 64
 
 def process_poems1(file_name):
     """
-
     :param file_name:
     :return: poems_vector  have tow dimmention ,first is the poem, the second is the word_index
     e.g. [[1,2,3,4,5,6,7,8,9,10],[9,6,3,8,5,2,7,4,1]]
-
     """
     poems = []
     with open(file_name, "r", encoding='utf-8', ) as f:
